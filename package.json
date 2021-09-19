@@ -9,7 +9,6 @@
   "author": "me@kmtu.info",
   "license": "ISC",
   "dependencies": {
-    "@linode/api-v4": "^0.54.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "passport": "^0.4.1",
