@@ -7,8 +7,8 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
 const app = express()
-const port = process.env.DST_API_PORT || 3000
-const apiKey = process.env.GAMES_API_KEY;
+const port = process.env.APP_API_PORT || 3000
+const apiKey = process.env.APP_API_KEY;
 
 passport.use(new BearerStrategy(
     function(token, done) {
