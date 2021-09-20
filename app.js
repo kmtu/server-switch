@@ -4,6 +4,7 @@ const express = require('express')
 const passport = require('passport');
 const BearerStrategy = require('passport-http-bearer').Strategy;
 const util = require('util');
+const cp = require('child_process');
 const exec = util.promisify(require('child_process').exec);
 
 const app = express()
@@ -24,15 +25,23 @@ const router = express.Router();
 router.get(
     '/up/:server',
     passport.authenticate('bearer', { session: false }),
-    async (req, res) => {
+    (req, res) => {
         server = req.params.server
         if (server === 'minecraft') {
             console.log(`up ${server}`);
-            const {stdout, stderr} = await exec(
-                'docker-compose -f /home/kmtu/minecraft/docker-compose.yml up -d');
-            console.log('stdout:', stdout);
-            console.log('stderr:', stderr);
-            res.send(`up ${server}`);
+            cp.exec(
+                'docker-compose -f /home/kmtu/minecraft/docker-compose.yml up -d',
+                (err, stdout, stderr) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        console.log('stdout:', stdout);
+                        console.log('stderr:', stderr);
+                        res.send(`up ${server}`);
+                    }
+                }
+            );
         }
         else {
             console.log(`unknown server: ${server}`);
