@@ -22,19 +22,44 @@ passport.use(new BearerStrategy(
 const router = express.Router();
 
 router.get(
-    '/test',
+    '/up/:server',
     passport.authenticate('bearer', { session: false }),
     async (req, res) => {
-        const {stdout, stderr} = await exec('ls');
-        console.log('stdout:', stdout);
-        console.log('stderr:', stderr);
-        res.json({
-            stdout,
-            stderr
-        });
+        server = req.params.server
+        if (server === 'minecraft') {
+            console.log(`up ${server}`);
+            const {stdout, stderr} = await exec(
+                'docker-compose -f /home/kmtu/minecraft/docker-compose.yml up -d');
+            console.log('stdout:', stdout);
+            console.log('stderr:', stderr);
+            res.send(`up ${server}`);
+        }
+        else {
+            console.log(`unknown server: ${server}`);
+            res.status(404).send(`unknown server: ${server}`);
+        }
     }
 );
 
+router.get(
+    '/stop/:server',
+    passport.authenticate('bearer', { session: false }),
+    async (req, res) => {
+        server = req.params.server
+        if (server === 'minecraft') {
+            console.log(`stop ${server}`);
+            const {stdout, stderr} = await exec(
+                'docker-compose -f /home/kmtu/minecraft/docker-compose.yml stop');
+            console.log('stdout:', stdout);
+            console.log('stderr:', stderr);
+            res.send(`stop ${server}`);
+        }
+        else {
+            console.log(`unknown server: ${server}`);
+            res.status(404).send(`unknown server: ${server}`);
+        }
+    }
+);
 
 app.use('/api/v1', router);
 
