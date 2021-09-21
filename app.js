@@ -23,12 +23,12 @@ passport.use(new BearerStrategy(
 const router = express.Router();
 
 router.get(
-    '/up/:server',
+    '/start/:service',
     passport.authenticate('bearer', { session: false }),
     (req, res) => {
-        server = req.params.server
-        if (server === 'minecraft') {
-            console.log(`up ${server}`);
+        service = req.params.service
+        if (service === 'minecraft') {
+            console.log(`start ${service}`);
             cp.exec(
                 'docker-compose -f /home/kmtu/minecraft/docker-compose.yml up -d',
                 (err, stdout, stderr) => {
@@ -38,34 +38,34 @@ router.get(
                     else {
                         console.log('stdout:', stdout);
                         console.log('stderr:', stderr);
-                        res.send(`up ${server}`);
+                        res.send(`start ${service}`);
                     }
                 }
             );
         }
         else {
-            console.log(`unknown server: ${server}`);
-            res.status(404).send(`unknown server: ${server}`);
+            console.log(`unknown service: ${service}`);
+            res.status(404).send(`unknown service: ${service}`);
         }
     }
 );
 
 router.get(
-    '/stop/:server',
+    '/stop/:service',
     passport.authenticate('bearer', { session: false }),
     async (req, res) => {
-        server = req.params.server
-        if (server === 'minecraft') {
-            console.log(`stop ${server}`);
+        service = req.params.service
+        if (service === 'minecraft') {
+            console.log(`stop ${service}`);
             const {stdout, stderr} = await exec(
                 'docker-compose -f /home/kmtu/minecraft/docker-compose.yml stop');
             console.log('stdout:', stdout);
             console.log('stderr:', stderr);
-            res.send(`stop ${server}`);
+            res.send(`stop ${service}`);
         }
         else {
-            console.log(`unknown server: ${server}`);
-            res.status(404).send(`unknown server: ${server}`);
+            console.log(`unknown service: ${service}`);
+            res.status(404).send(`unknown service: ${service}`);
         }
     }
 );
