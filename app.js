@@ -22,7 +22,7 @@ passport.use(new BearerStrategy(
 
 const router = express.Router();
 
-router.get(
+router.post(
     '/start/:service',
     passport.authenticate('bearer', { session: false }),
     async (req, res) => {
@@ -42,7 +42,7 @@ router.get(
     }
 );
 
-router.get(
+router.post(
     '/stop/:service',
     passport.authenticate('bearer', { session: false }),
     async (req, res) => {
