@@ -22,14 +22,16 @@ passport.use(new BearerStrategy(
 
 const router = express.Router();
 
+const availableServices = ['minecraft', 'valheim']
+
 router.get(
     '/status/:service',
     passport.authenticate('bearer', { session: false }),
     async (req, res) => {
         service = req.params.service
-        if (service === 'minecraft') {
+        if (availableServices.includes(service)) {
             const {stdout, stderr} = await exec(
-                'docker ps | grep minecraft | wc -l');
+                `docker ps | grep ${service} | wc -l`);
             console.log(`querying ${service} status`);
             console.log('stdout:', stdout);
             console.log('stderr:', stderr);
