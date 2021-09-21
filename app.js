@@ -49,11 +49,11 @@ router.post(
     passport.authenticate('bearer', { session: false }),
     async (req, res) => {
         service = req.params.service
-        if (service === 'minecraft') {
+        if (availableServices.includes(service)) {
             console.log(`starting ${service}`);
             res.send(`starting ${service}`);
             const {stdout, stderr} = await exec(
-                'docker-compose -f /home/kmtu/minecraft/docker-compose.yml up -d');
+                `docker-compose -f /home/kmtu/${service}/docker-compose.yml up -d`);
             console.log('stdout:', stdout);
             console.log('stderr:', stderr);
         }
@@ -69,11 +69,11 @@ router.post(
     passport.authenticate('bearer', { session: false }),
     async (req, res) => {
         service = req.params.service
-        if (service === 'minecraft') {
+        if (availableServices.includes(service)) {
             console.log(`stopping ${service}`);
             res.send(`stopping ${service}`);
             const {stdout, stderr} = await exec(
-                'docker-compose -f /home/kmtu/minecraft/docker-compose.yml stop');
+                `docker-compose -f /home/kmtu/${service}/docker-compose.yml stop`);
             console.log('stdout:', stdout);
             console.log('stderr:', stderr);
         }
