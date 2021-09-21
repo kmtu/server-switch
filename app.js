@@ -25,23 +25,15 @@ const router = express.Router();
 router.get(
     '/start/:service',
     passport.authenticate('bearer', { session: false }),
-    (req, res) => {
+    async (req, res) => {
         service = req.params.service
         if (service === 'minecraft') {
-            console.log(`start ${service}`);
-            cp.exec(
-                'docker-compose -f /home/kmtu/minecraft/docker-compose.yml up -d',
-                (err, stdout, stderr) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                    else {
-                        console.log('stdout:', stdout);
-                        console.log('stderr:', stderr);
-                        res.send(`start ${service}`);
-                    }
-                }
-            );
+            console.log(`starting ${service}`);
+            res.send(`starting ${service}`);
+            const {stdout, stderr} = await exec(
+                'docker-compose -f /home/kmtu/minecraft/docker-compose.yml up -d');
+            console.log('stdout:', stdout);
+            console.log('stderr:', stderr);
         }
         else {
             console.log(`unknown service: ${service}`);
@@ -56,12 +48,12 @@ router.get(
     async (req, res) => {
         service = req.params.service
         if (service === 'minecraft') {
-            console.log(`stop ${service}`);
+            console.log(`stopping ${service}`);
+            res.send(`stopping ${service}`);
             const {stdout, stderr} = await exec(
                 'docker-compose -f /home/kmtu/minecraft/docker-compose.yml stop');
             console.log('stdout:', stdout);
             console.log('stderr:', stderr);
-            res.send(`stop ${service}`);
         }
         else {
             console.log(`unknown service: ${service}`);
